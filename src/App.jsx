@@ -57,13 +57,17 @@ function TodoItem({ id, children, checked = false, onChange, onDelete }) {
 		onChange(e);
 	}
 
+	const handleDelete = (e) => {
+		onDelete(e, id);
+	}
+
 	return (
 		<>
 			<div className="todoItem">
 				<div>
 					<input id={id} type="checkbox" checked={boxChecked} onChange={handleChange} /><label className="todoItemLabel">{children}</label>
 				</div>
-				<IconButton id="DeleteItem" icon={faTrashCan} onClick={onDelete} />
+				<IconButton id="DeleteItem" icon={faTrashCan} onClick={handleDelete} />
 			</div>
 		</>
 	);
@@ -71,7 +75,7 @@ function TodoItem({ id, children, checked = false, onChange, onDelete }) {
 
 function App() {
 	let fullItemList = initialList;
-	
+
 	// Item list that is visible to user
 	const [itemList, setItemList] = React.useState(fullItemList);
 	const [itemCount, setItemCount] = React.useState(itemList.filter(obj => obj.completed == false).length);
@@ -110,8 +114,22 @@ function App() {
 		itemInput.value = "";
 	};
 
-	const deleteItem = (id) => {
+	const deleteItem = (e, id) => {
+		let index = 0;
+
+		for(let i = 0; i < fullItemList.length; i++) {
+			if(fullItemList[i].id == id) {
+				index = i;
+			}
+		}
+
+		const deletedItem = fullItemList.splice(index, 1);
 		
+		if(deletedItem[0].completed == false) {
+			setItemCount(itemCount - 1);
+		}
+
+		setItemList(sortedList(fullItemList, currentSort));
 	}
 
 	const handleSort = (e) => {
