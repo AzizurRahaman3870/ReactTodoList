@@ -4,12 +4,11 @@
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-#root {
+html {
+	background-color: #CCC;
 	width: 100vw;
 	height: 100vh;
-	overflow: hidden;
-	/* Known Issue: If items exceed a certain amount, the rest of the items are cut off and can't see the app-footer */
-	background-color: #CCC;
+	overflow-x: hidden;
 }
 
 #app {

@@ -2,7 +2,8 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMagnifyingGlass, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
-const initialList = [
+const initialList = localStorage.getItem('todoList') ? JSON.parse(localStorage.getItem('todoList')) : () => {
+	const list = [
 	{
 		id: 1,
 		value: 'Learning JavaScript',
@@ -21,6 +22,10 @@ const initialList = [
 		completed: false,
 	},
 ];
+
+	localStorage.setItem('todoList', JSON.stringify(list));
+	return list;
+}
 
 const sortingMethod = [
 	'AllSort',
@@ -107,12 +112,13 @@ function App() {
 		e.preventDefault();
 
 		let itemInput = document.getElementById('itemInput');
-		fullItemList.push({ id: fullItemList[fullItemList.length - 1].id + 1, value: itemInput.value, completed: false });
+		fullItemList.push({ id: fullItemList.length != 0 ? (fullItemList[fullItemList.length - 1].id + 1) : 1, value: itemInput.value, completed: false });
 		setItemList(sortedList(fullItemList, currentSort));
 
 		setItemCount(itemCount + 1);
 		itemInput.value = "";
-	};
+		localStorage.setItem('todoList', JSON.stringify(fullItemList));
+	}
 
 	const deleteItem = (e, id) => {
 		let index = 0;
@@ -124,12 +130,14 @@ function App() {
 		}
 
 		const deletedItem = fullItemList.splice(index, 1);
+		console.log(deletedItem);
 		
 		if(deletedItem[0].completed == false) {
 			setItemCount(itemCount - 1);
 		}
 
 		setItemList(sortedList(fullItemList, currentSort));
+		localStorage.setItem('todoList', JSON.stringify(fullItemList));
 	}
 
 	const handleSort = (e) => {
@@ -146,7 +154,7 @@ function App() {
 
 		let newItemList = sortedList(fullItemList, e.target.id);
 		setItemList(newItemList);
-	};
+	}
 
 	const handleItemCheck = (e) => {
 		e.target.checked ? setItemCount(itemCount - 1) : setItemCount(itemCount + 1);
@@ -154,11 +162,17 @@ function App() {
 		itemListCopy.map((item) => {
 			if (item.id == e.target.id) {
 				item.completed = !item.completed;
+				fullItemList.map((item2, index) => {
+					if(item2.id == item.id) {
+						fullItemList[index].completed = item.completed;
+					}
+				});
 			}
 		});
-		
+
+		localStorage.setItem('todoList', JSON.stringify(fullItemList));
 		setItemList(sortedList(itemListCopy, currentSort));
-	};
+	}
 
 	return (
 		<>
@@ -195,7 +209,7 @@ function App() {
 				</div>
 			</div>
 		</>
-	)
+	);
 }
 
 export default App

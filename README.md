@@ -3,6 +3,7 @@
 ![ReactTodoList Preview](https://i.imgur.com/LfiSrvX.png)
 
 ![Static Badge](https://img.shields.io/badge/version%20-%200.1%20-%20grey?style=plastic)
+
 A simple to-do list application built with ReactJS.
 
 ## Table of Contents
@@ -47,7 +48,7 @@ ReactTodoList is a lightweight and easy-to-use todo list application developed u
 
 1. Start the development server
     ```bash
-    npm start
+    npm run dev
     ```
-2. Open your browser and visit http://localhost:3000
+2. Open your browser and visit http://localhost:5173
 3. Use the application to manage your todo list.
