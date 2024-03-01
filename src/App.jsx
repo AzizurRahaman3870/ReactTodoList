@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMagnifyingGlass, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
-const initialList = localStorage.getItem('todoList') ? JSON.parse(localStorage.getItem('todoList')) : () => {
+const initialList = JSON.parse(localStorage.getItem('todoList')) || (() => {
 	const list = [
 	{
 		id: 1,
@@ -25,7 +25,7 @@ const initialList = localStorage.getItem('todoList') ? JSON.parse(localStorage.g
 
 	localStorage.setItem('todoList', JSON.stringify(list));
 	return list;
-}
+})();
 
 const sortingMethod = [
 	'AllSort',
@@ -128,16 +128,17 @@ function App() {
 				index = i;
 			}
 		}
-
+		
 		const deletedItem = fullItemList.splice(index, 1);
-		console.log(deletedItem);
 		
 		if(deletedItem[0].completed == false) {
 			setItemCount(itemCount - 1);
 		}
 
-		setItemList(sortedList(fullItemList, currentSort));
 		localStorage.setItem('todoList', JSON.stringify(fullItemList));
+
+		setItemList(sortedList([...fullItemList], currentSort));
+		
 	}
 
 	const handleSort = (e) => {
@@ -158,20 +159,15 @@ function App() {
 
 	const handleItemCheck = (e) => {
 		e.target.checked ? setItemCount(itemCount - 1) : setItemCount(itemCount + 1);
-		const itemListCopy = itemList;
-		itemListCopy.map((item) => {
+
+		fullItemList.map((item) => {
 			if (item.id == e.target.id) {
 				item.completed = !item.completed;
-				fullItemList.map((item2, index) => {
-					if(item2.id == item.id) {
-						fullItemList[index].completed = item.completed;
-					}
-				});
 			}
 		});
 
 		localStorage.setItem('todoList', JSON.stringify(fullItemList));
-		setItemList(sortedList(itemListCopy, currentSort));
+		setItemList(sortedList(fullItemList, currentSort));
 	}
 
 	return (
